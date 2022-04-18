@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ResearchProjectDef>
+        <defName>BasicGuardTower</defName>
+        <label>Basic Guardtower</label>
+        <prerequisites>
+            <li>ComplexClothing</li>
+        </prerequisites>
+        <description>Learn How to Build Basic GuardTowers out of Wood or Stone Blocks</description>
+        <baseCost>2000</baseCost>
+        <techLevel>Medieval</techLevel>
+        <researchViewY>4.25</researchViewY>
+        <researchViewX>2.25</researchViewX>
+  
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <defName>ModernGuardTowers</defName>
+        <label>Modern Guardtowers</label>
+        <prerequisites>
+            <li>BasicGuardTower</li>
+            <li>MicroelectronicsBasics</li>
+        </prerequisites>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <techLevel>Industrial</techLevel>
+        <baseCost>2500</baseCost>
+        <researchViewX>12</researchViewX>
+        <researchViewY>3.2</researchViewY>
+        <description>Learn How to Build Fortified and Concrete GuardTowers</description>
+ 
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <defName>SniperNest</defName>
+        <label>Sniper Nest</label>
+        <description>Learn to create a hole in the wall and allow ur colonist to hide and attack enemies with increased range</description>
+        <prerequisites>
+            <li>ModernGuardTowers</li>
+            <li>MicroelectronicsBasics</li>
+        </prerequisites>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <baseCost>3000</baseCost>
+        <techLevel>Industrial</techLevel>
+        <researchViewX>14.00</researchViewX>
+        <researchViewY>4.60</researchViewY>
+
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <defName>FortifiedBunkers</defName>
+        <label>Fortified Bunkers</label>
+        <description>Allow Building Bunkers that let your colonists Hide and shoot from inside</description>
+        <techLevel>Industrial</techLevel>
+        <baseCost>4000</baseCost>
+        <prerequisites>
+            <li>ModernGuardTowers</li>
+            <li>Fabrication</li>
+        </prerequisites>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <researchViewX>15.00</researchViewX>
+        <researchViewY>2.8</researchViewY>
+    </ResearchProjectDef>
+</Defs>
