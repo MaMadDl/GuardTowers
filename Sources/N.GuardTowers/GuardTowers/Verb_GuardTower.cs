@@ -114,7 +114,7 @@ namespace NGT
             {
                 //Log.Message($"{vb}");
                 vb.caster = caster;
-
+                
                 //vb.WarmupComplete();
                 vb.TryStartCastOn(currentTarget);
                

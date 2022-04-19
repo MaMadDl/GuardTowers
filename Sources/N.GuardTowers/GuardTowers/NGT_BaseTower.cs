@@ -162,12 +162,10 @@ namespace NGT
                     FixBonusStats(GetInner().InnerListForReading);
 
                     innerContainer.TryDropAll(this.InteractionCell, Map, ThingPlaceMode.Near, (pawn, res) => pawn.Kill(new DamageInfo(DamageDefOf.Crush, 1000)));
-                    innerContainer.ClearAndDestroyContents(mode);
+                 
                 }
-                else
-                {
-                    innerContainer.ClearAndDestroyContents(mode);
-                }
+                innerContainer.ClearAndDestroyContents(mode);
+                
             }
 
             base.Destroy(mode);
@@ -209,6 +207,7 @@ namespace NGT
 
             var assignedPawns = innerContainer.Count;
             var pawnList = new List<Pawn>();
+
             foreach (var pawn in selPawns)
             {
                 if (pawn.equipment.Primary != null)
@@ -246,10 +245,7 @@ namespace NGT
             {
                 var job = new Job(jobDef, this);
                 bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.DraftedOrder);
-                //if (ret && innerContainer.Count == 0)
-                //{
-                //    this.def.building.turretGunDef.Verbs[0].range = pawn.equipment.Primary.def.Verbs[0].range;
-                //}
+               
             }
         }
 
@@ -380,7 +376,7 @@ namespace NGT
                             defVerb.range -= bonusRange;
                         }
                         pawnToEject.DrawGUIOverlay();
-                        innerContainer.TryDrop(pawnToEject, this.InteractionCell, Map, ThingPlaceMode.Near, out _) ;
+                        innerContainer.TryDrop(pawnToEject, this.InteractionCell, Map, ThingPlaceMode.Near, out _ ) ;
                     }, MenuOptionPriority.Default, null, null, 29f));
             }
 
@@ -420,9 +416,7 @@ namespace NGT
         {
             bonusRange = 4;
             TowerName = "Simple Guard Tower";
-            Stats.Add("Range(+4)"); //done
-            Stats.Add("Cover Effectiveness(+50%)"); // diffrent
-            Stats.Add("Enemy Cover(-10%)"); // not possible
+            Stats.Add("Range("+bonusRange.ToString()+")"); //done
             Stats.Add("UnObstracted Shooting"); //true
         }
 
