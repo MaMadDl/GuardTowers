@@ -18,7 +18,7 @@
         <thingClass>NGT.SimpleGT</thingClass>
         <defName>GuardTower_Simple</defName>
         <label>Simple GuardTower</label>
-        <description>A Simple Guardtower Made out of wood which can </description>
+        <description>A Simple Guardtower Made out of wood which can</description>
         <graphicData>
             <graphicClass>Graphic_Single</graphicClass>
             <texPath>Things/Building/Security/SimpleGuardTower</texPath>

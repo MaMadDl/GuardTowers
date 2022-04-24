@@ -9,7 +9,6 @@ namespace NGT
     {
         static Harmony_Patches()
         {
-            //Log.Message("Hello World!");
             var harmony = new Harmony("rimworld.ngt.guardtowers");
 
             var original = typeof(GameEnder).GetMethod("CheckOrUpdateGameOver");
