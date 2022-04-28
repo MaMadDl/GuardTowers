@@ -74,6 +74,7 @@
     <Compile Include="Harmony_Patches.cs" />
     <Compile Include="NGT_BaseTower.cs" />
     <Compile Include="NGT_JobDriver.cs" />
+    <Compile Include="NGT_MentalBreaks.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="PlaceWorker_ShowTowerRadius.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

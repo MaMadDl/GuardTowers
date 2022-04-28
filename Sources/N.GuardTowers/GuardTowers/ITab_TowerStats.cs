@@ -133,7 +133,7 @@ namespace NGT
 
     [HarmonyPatch(typeof(CaravanThingsTabUtility), nameof(CaravanThingsTabUtility.DoAbandonButton)
         , new[] { typeof(Rect), typeof(Thing),typeof(Caravan) })]
-    class guardtower_banishButtPatch
+    static class guardtower_banishButtPatch
     {
         static bool Prefix(Rect rowRect, Thing t, Caravan caravan)
         {
