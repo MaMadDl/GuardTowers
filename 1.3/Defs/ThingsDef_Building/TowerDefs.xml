@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <ThingDef Name="BaseGuardTower" Abstract="True" ParentName="BuildingBase">
+     
         <drawerType>MapMeshAndRealTime</drawerType>
         <altitudeLayer>Building</altitudeLayer>
         <hasInteractionCell>True</hasInteractionCell>
@@ -8,17 +9,41 @@
         <stealable>false</stealable>
         <size>(2,2)</size>
         <passability>Impassable</passability>
-       <fillPercent>0.5</fillPercent>
-       <designationCategory>Security</designationCategory>
-       <constructionSkillPrerequisite>8</constructionSkillPrerequisite>
-       <uiIconScale>0.8</uiIconScale>
+        <fillPercent>0.5</fillPercent>
+        <designationCategory>Security</designationCategory>
+        <constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+        <uiIconScale>0.8</uiIconScale>
+      
+        <building>
+           <ai_combatDangerous>true</ai_combatDangerous>
+           <turretGunDef>Gun_TowerGun</turretGunDef>
+           <turretBurstCooldownTime>0</turretBurstCooldownTime>
+        </building>
+
+        <tickerType>Normal</tickerType>
+        <rotatable>true</rotatable>
+        <useStuffTerrainAffordance>true</useStuffTerrainAffordance>
+
+        <placeWorkers>
+            <li>PlaceWorker_NotUnderRoof</li>
+            <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+            <li>NGT.PlaceWorker_ShowColonistsRadius</li>
+            
+        </placeWorkers>
+        <hasTooltip>true</hasTooltip>
+        <blockWind>true</blockWind>
+        <blockLight>true</blockLight>
+        <inspectorTabs>
+            <li>NGT.ITab_Tower</li>
+        </inspectorTabs>
+
     </ThingDef>
     
     <ThingDef ParentName="BaseGuardTower">
         <thingClass>NGT.SimpleGT</thingClass>
         <defName>GuardTower_Simple</defName>
         <label>Simple GuardTower</label>
-        <description>A Simple Guardtower Made out of wood which can</description>
+        <description>A Simple Guardtower Made out of wood which can House a Colonist to shoot from inside with increased Range</description>
         <graphicData>
             <graphicClass>Graphic_Single</graphicClass>
             <texPath>Things/Building/Security/SimpleGuardTower</texPath>
@@ -30,10 +55,7 @@
         <stuffCategories>
             <li>Woody</li>
         </stuffCategories>
-        <tickerType>Normal</tickerType>
         <costStuffCount>400</costStuffCount>
-        <rotatable>true</rotatable>
-        <useStuffTerrainAffordance>true</useStuffTerrainAffordance>
         <staticSunShadowHeight>1.2</staticSunShadowHeight>
         <repairEffect>ConstructDirt</repairEffect>
         <selectable>true</selectable>
@@ -41,7 +63,6 @@
             <li>BasicGuardTower</li>
             <li>ComplexFurniture</li>
         </researchPrerequisites>
-
         <!-- <comps>
             <li Class="CompProperties_Forbiddable"/>
              <li Class="CompProperties_Power">
@@ -56,57 +77,41 @@
             <Flammability>75</Flammability>
             <ShootingAccuracyTurret>0.96</ShootingAccuracyTurret>
         </statBases>
-        <placeWorkers>
-            <li>PlaceWorker_NotUnderRoof</li>
-            <li>PlaceWorker_PreventInteractionSpotOverlap</li>
-            <li>NGT.PlaceWorker_ShowColonistsRadius</li>
-        </placeWorkers>
         <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
-        <hasTooltip>true</hasTooltip>
-        <blockWind>true</blockWind>
-        <blockLight>true</blockLight>
-        <inspectorTabs>
-            <li>NGT.ITab_Tower</li>
-        </inspectorTabs>
-        <soundImpactDefault>BulletImpact_Wood</soundImpactDefault>
-        <building>
-            <ai_combatDangerous>true</ai_combatDangerous>
-            <turretGunDef>Gun_TowerGun</turretGunDef>
-            <turretBurstCooldownTime>0</turretBurstCooldownTime>
-        </building>
+        <!-- <soundImpactDefault>BulletImpact_Wood</soundImpactDefault> -->
+
+    </ThingDef>
         
-        </ThingDef>
-        
-        <ThingDef ParentName="BaseWeaponTurret">
-            <defName>Gun_TowerGun</defName>
-            <label> </label>
-            <graphicData>
-              <texPath>Nothingness</texPath>
-              <graphicClass>Graphic_Single</graphicClass>
-            </graphicData>
-            <soundInteract>Interact_Rifle</soundInteract>
-            <weaponTags Inherit="false">
-              <li>ATurretGun</li>
-            </weaponTags>
-            <verbs>
-              <li>
-                <verbClass>NGT.Verb_GuardTowers</verbClass>
-                <hasStandardCommand>true</hasStandardCommand>
-                <defaultProjectile>Bullet_MiniTurret</defaultProjectile>
-                <warmupTime>0</warmupTime>
-                <range>0</range>
-                <burstShotCount>0</burstShotCount>
-                <minRange>2.9</minRange>
-                
-                <requireLineOfSight>false</requireLineOfSight>
-                <!-- <isMortar>true</isMortar> -->
-                <!-- <defaultCooldownTime>1.4</defaultCooldownTime> -->
-                <ticksBetweenBurstShots>0</ticksBetweenBurstShots>
-                <!-- <soundCast>GunShotA</soundCast>
-                <soundCastTail>GunTail_Light</soundCastTail> -->
-                <muzzleFlashScale>0</muzzleFlashScale>
-                <!-- <consumeFuelPerShot>1</consumeFuelPerShot> -->
-              </li>
-            </verbs>
-        </ThingDef>
+    <ThingDef ParentName="BaseWeaponTurret">
+        <defName>Gun_TowerGun</defName>
+        <label> </label>
+        <graphicData>
+            <texPath>Nothingness</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <soundInteract>Interact_Rifle</soundInteract>
+        <weaponTags Inherit="false">
+            <li>ATurretGun</li>
+        </weaponTags>
+        <verbs>
+            <li>
+            <verbClass>NGT.Verb_GuardTowers</verbClass>
+            <hasStandardCommand>true</hasStandardCommand>
+            <defaultProjectile>Bullet_MiniTurret</defaultProjectile>
+            <warmupTime>0</warmupTime>
+            <range>0</range>
+            <burstShotCount>0</burstShotCount>
+            <minRange>2.9</minRange>
+            
+            <requireLineOfSight>false</requireLineOfSight>
+            <!-- <isMortar>true</isMortar> -->
+            <!-- <defaultCooldownTime>1.4</defaultCooldownTime> -->
+            <ticksBetweenBurstShots>0</ticksBetweenBurstShots>
+            <!-- <soundCast>GunShotA</soundCast>
+            <soundCastTail>GunTail_Light</soundCastTail> -->
+            <muzzleFlashScale>0</muzzleFlashScale>
+            <!-- <consumeFuelPerShot>1</consumeFuelPerShot> -->
+            </li>
+        </verbs>
+    </ThingDef>
 </Defs>
