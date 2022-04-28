@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Defs>
+<TaleDef>
+    <defName>NGT_ShootoutTale</defName>
+    <label>Shootout</label>
+    <taleClass>Tale_SinglePawn</taleClass>
+    <type>Volatile</type>
+    <baseInterest>3</baseInterest>
+    <rulePack>
+      <rulesStrings>
+        <li>tale_noun->[PAWN_nameDef] had enough and shooting everywhere</li>
+        <li>image->[PAWN_nameFull] is shooting everywhere from the tower he sat in [circumstance_group]</li>
+        <li>image->[PAWN_nameFull] is bored and shooting randomly [circumstance_group]</li>
+        <li>circumstance_phrase->while guarding</li>
+        <li>circumstance_phrase->seemingly without reason</li>
+        <li>circumstance_phrase->while others defending</li>
+        <li>circumstance_phrase->because of the stress</li>
+        <li>desc_sentence->[PAWN_pronoun] is bored beyond measure.</li>
+        <li>desc_sentence->[PAWN_possessive] teeth are bared in a deadly snarl.</li>
+        <li>desc_sentence->[PAWN_possessive] eyes are dead pools of madness.</li>
+        <li>desc_sentence->Spittle is flying from [PAWN_possessive] mouth as [PAWN_possessive] screams with insane laughter.</li>
+        <li>desc_sentence->[PAWN_pronoun] has lost part of [PAWN_possessive] clothing.</li>
+        <li>desc_sentence->[PAWN_pronoun] is grimacing in misery.</li>
+        <li>desc_sentence->[PAWN_pronoun] seems smiling maniacally.</li>
+        <li>desc_sentence->[PAWN_pronoun] is depicted with the snarling face of a [Animal].</li>
+        <li>desc_sentence->[Animal]s symbolically surround [PAWN_possessive] head.</li>
+        <li>desc_sentence->[PAWN_pronoun] has a murderous glint in [PAWN_possessive] eye.</li>
+        <li>desc_sentence->[PAWN_possessive] face is set in a look of twisted serenity.</li>
+        <li>desc_sentence->A single tear rolls down [PAWN_possessive] face.</li>
+      </rulesStrings>
+    </rulePack>
+  </TaleDef>
+</Defs>
