@@ -22,8 +22,8 @@ namespace NGT
             yield return
                 Toils_Towers.GotoThing(TargetIndex.A,
                     PathEndMode.ClosestTouch); //Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch);
-            
-            yield return Toils_General.Wait(100, TargetIndex.A);
+          
+            yield return Toils_General.Wait( GetActor().GetStatValue(StatDefOf.MoveSpeed).SecondsToTicks() / 2 , TargetIndex.A);
 
             var enter = new Toil();
             enter.initAction = delegate
