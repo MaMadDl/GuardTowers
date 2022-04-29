@@ -325,6 +325,50 @@ namespace NGT
                 yield return eject;
             }
 
+            if (Prefs.DevMode)
+            {
+                if (innerContainer.Count > 0)
+                {
+                    yield return new Command_Action
+                    {
+                        defaultLabel = "Dev: Mental break",
+                        action = delegate ()
+                        {
+                            Pawn pawn2;
+                            if ((from x in this.GetInner().InnerListForReading
+                                 where x.RaceProps.Humanlike && !x.InMentalState
+                                 select x).TryRandomElement(out pawn2))
+                            {
+                                pawn2.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Sad, null, false, false, null, false, false, false);
+                            }
+                        }
+                    };
+                    //yield return new Command_Action
+                    //{
+                    //    defaultLabel = "Dev: Mental break",
+
+                    //    action = delegate ()
+                    //    {
+                    //        var list = new List<FloatMenuOption>();
+                    //        foreach (var p in innerContainer)
+                    //        {
+                    //            list.Add(new FloatMenuOption(p.NameFullColored,
+                    //            delegate
+                    //            {
+                    //                bool tmp=false;
+                    //               tmp= p.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Sad,
+                    //                    null, true, false, null, false, false, false);
+
+                    //            }, MenuOptionPriority.Default, null, null, 29f));
+
+                    //            Find.WindowStack.Add(new FloatMenu(list));
+                    //        }
+                    //    }
+                    //};
+
+                }
+            }
+
             //string[] direcs = { "North", "East", "South", "West" };
             //var direction = new Command_Action
             //{
