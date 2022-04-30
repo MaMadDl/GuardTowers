@@ -25,21 +25,36 @@ namespace NGT
 		}
         public override void PreStart()
         {
-            base.PreStart();
-			this.CheckPreRequisite();
             
-
+            base.PreStart();
+            if (!this.CheckPreRequisite())
+            {
+                /// Add Method To prevent 
+            }
 
         }
-        protected void CheckPreRequisite()
+        protected bool CheckPreRequisite()
         {
-            
-            var towerContainer = pawn.Map.listerThings.AllThings.OfType<BaseGuardTower>();
-            tower = towerContainer.Where(c => c.GetInner().Contains(pawn)).First();
-            
-            var pod = (BaseGuardTower)pawn.CurJob.targetA.Thing;
-            Log.Error(pawn.IsInAnyStorage().ToString() +"\t"+ tower.TrueCenter().ToIntVec3().ToString() +"\t" + pod.ToString());
-            ///FIXME
+            try
+            {
+                if (!pawn.equipment.Primary.def.IsRangedWeapon)
+                    {
+                        return false;
+                    }
+
+                var towerContainer = pawn.MapHeld.listerBuildings.allBuildingsColonist.OfType<BaseGuardTower>();
+                tower = towerContainer.Where(t => pawn.CanReach(t, PathEndMode.InteractionCell, Danger.Unspecified))
+                                      .OrderBy(x=> ((LocalTargetInfo)pawn).Cell.DistanceTo(((LocalTargetInfo)x).Cell)).First();
+
+            }
+            catch
+            {
+                Messages.Message("No Tower that Pawn Can Go to", MessageTypeDefOf.ThreatSmall);
+                return false;
+            }
+
+            return true;
+
         }
 
         public override void MentalStateTick()
@@ -47,6 +62,6 @@ namespace NGT
             base.MentalStateTick();
         }
 
-        BaseGuardTower tower;
+        public BaseGuardTower tower;
     }
 }
