@@ -12,6 +12,7 @@
     <MentalStateDef ParentName="BaseMentalState">
         <defName>NGT_towerShootout</defName>
         <stateClass>NGT.MB_Shootout</stateClass>
+        <workerClass>NGT.ShootoutStateWorker</workerClass>
         
         <prisonersCanDo>false</prisonersCanDo>
         <colonistsOnly>true</colonistsOnly>

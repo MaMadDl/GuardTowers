@@ -11,50 +11,30 @@ namespace NGT
 {
     public class MB_Shootout : MentalState
     {
-		public override bool ForceHostileTo(Thing t)
-		{
-			return true;
-		}
-		public override bool ForceHostileTo(Faction f)
-		{
-			return true;
-		}
-		public override RandomSocialMode SocialModeMax()
-		{
-			return RandomSocialMode.Off;
-		}
-        public override void PreStart()
+		//public override bool ForceHostileTo(Thing t)
+		//{
+		//	return true;
+		//}
+		//public override bool ForceHostileTo(Faction f)
+		//{
+		//	return true;
+		//}
+		//public override RandomSocialMode SocialModeMax()
+		//{
+		//	return RandomSocialMode.Off;
+		//}
+        public override void PostStart(string reason)
         {
-            
-            base.PreStart();
-            if (!this.CheckPreRequisite())
+            base.PostStart(reason);
+            tower = (pawn.MentalState.def.Worker as ShootoutStateWorker).towerHolder;
+
+            var jobDef = DefDatabase<JobDef>.GetNamed("NGT_EnterTower");
+            var job = new Job(jobDef, tower);
+            bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.InMentalState);
+            if (ret)
             {
-                /// Add Method To prevent 
+                Log.Warning("job successful");
             }
-
-        }
-        protected bool CheckPreRequisite()
-        {
-            try
-            {
-                if (!pawn.equipment.Primary.def.IsRangedWeapon)
-                    {
-                        return false;
-                    }
-
-                var towerContainer = pawn.MapHeld.listerBuildings.allBuildingsColonist.OfType<BaseGuardTower>();
-                tower = towerContainer.Where(t => pawn.CanReach(t, PathEndMode.InteractionCell, Danger.Unspecified))
-                                      .OrderBy(x=> ((LocalTargetInfo)pawn).Cell.DistanceTo(((LocalTargetInfo)x).Cell)).First();
-
-            }
-            catch
-            {
-                Messages.Message("No Tower that Pawn Can Go to", MessageTypeDefOf.ThreatSmall);
-                return false;
-            }
-
-            return true;
-
         }
 
         public override void MentalStateTick()
@@ -63,5 +43,50 @@ namespace NGT
         }
 
         public BaseGuardTower tower;
+    }
+
+    
+    public class ShootoutStateWorker : MentalStateWorker
+    {
+        public override bool StateCanOccur(Pawn pawn)
+        {
+
+            if (!base.StateCanOccur(pawn))
+            {
+                return false;
+            }
+            if (!pawn.Spawned)
+            {
+                return false;
+            }
+
+            if (pawn.equipment.Primary != null)
+            {
+                if (!pawn.equipment.Primary.def.IsRangedWeapon)
+                {
+                    return false;
+                }
+            }
+            else 
+            {
+                return false;
+            }
+
+            var towerContainer = pawn.MapHeld.listerBuildings.allBuildingsColonist.OfType<BaseGuardTower>();
+            if (towerContainer.Count() < 1 || towerContainer.Where(t => pawn.CanReach(t, PathEndMode.InteractionCell, Danger.Unspecified)).Count() < 1)
+            {
+
+                return false;
+            }
+
+            
+            towerHolder= towerContainer.Where(t => pawn.CanReach(t, PathEndMode.InteractionCell, Danger.Unspecified))
+                                      .OrderBy(x => ((LocalTargetInfo)pawn).Cell.DistanceTo(((LocalTargetInfo)x).Cell)).First();
+            
+            return true;
+
+        }
+
+        public BaseGuardTower towerHolder;
     }
 }
