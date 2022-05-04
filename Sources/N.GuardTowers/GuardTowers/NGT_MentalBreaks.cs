@@ -11,38 +11,49 @@ namespace NGT
 {
     public class MB_Shootout : MentalState
     {
-		//public override bool ForceHostileTo(Thing t)
-		//{
-		//	return true;
-		//}
-		//public override bool ForceHostileTo(Faction f)
-		//{
-		//	return true;
-		//}
-		//public override RandomSocialMode SocialModeMax()
-		//{
-		//	return RandomSocialMode.Off;
-		//}
+
+        public override RandomSocialMode SocialModeMax()
+        {
+            return RandomSocialMode.Off;
+        }
+
         public override void PostStart(string reason)
         {
             base.PostStart(reason);
             tower = (pawn.MentalState.def.Worker as ShootoutStateWorker).towerHolder;
 
-            var jobDef = DefDatabase<JobDef>.GetNamed("NGT_EnterTower");
-            var job = new Job(jobDef, tower);
-            bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.InMentalState);
-            if (ret)
-            {
-                Log.Warning("job successful");
-            }
         }
 
         public override void MentalStateTick()
         {
             base.MentalStateTick();
+
+            if (tower.GetInner().Contains(pawn))
+            {
+                SelectRandomLocation(); // => updates target
+
+            }
+            else
+            {
+                var job = new Job(DefDatabase<JobDef>.GetNamed("NGT_EnterTower"), tower);
+                bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
+                if (!ret)
+                {
+                    Log.Warning("couldn't do the job snapping out of it");
+                    base.RecoverFromState();
+                }
+                tower.EjectAllContents(); 
+            }
+
         }
 
-        public BaseGuardTower tower;
+        private void SelectRandomLocation()
+        {
+           
+        }
+
+        private LocalTargetInfo target;
+        private BaseGuardTower tower;
     }
 
     
