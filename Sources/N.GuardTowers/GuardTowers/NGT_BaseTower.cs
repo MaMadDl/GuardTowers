@@ -185,11 +185,11 @@ namespace NGT
         public virtual void EjectAllContents()
         {
             (AttackVerb as Verb_GuardTowers)?.ResetVerb();
-            //innerContainer.TryDropAll(Toils_Towers.GetEnterOutLoc(this), Map, ThingPlaceMode.Near);
             
             FixBonusStats(GetInner().InnerListForReading);
 
-            innerContainer.TryDropAll(this.InteractionCell, Map, ThingPlaceMode.Near);
+            innerContainer.TryDropAll(this.InteractionCell, Map, ThingPlaceMode.Near, 
+                                        (p, ret) => (p as Pawn).equipment.PrimaryEq.AllVerbs.ForEach(v => v.caster = p));
 
         }
        
@@ -277,12 +277,7 @@ namespace NGT
             void jobAction()
             {
                 var job = new Job(jobDef, this);
-                bool ret= myPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-                            
-                //if (ret && innerContainer.Count == 0)
-                //{
-                //    this.def.building.turretGunDef.Verbs[0].range = myPawn.equipment.Primary.def.Verbs[0].range;
-                //}
+                bool ret= myPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);      
             }
 
             yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption(jobStr, jobAction),
@@ -323,50 +318,6 @@ namespace NGT
                 eject.hotKey = KeyBindingDefOf.Misc1;
                 eject.icon = ContentFinder<Texture2D>.Get("UI/Commands/PodEject");
                 yield return eject;
-            }
-
-            if (Prefs.DevMode)
-            {
-                if (innerContainer.Count > 0)
-                {
-                    yield return new Command_Action
-                    {
-                        defaultLabel = "Dev: Mental break",
-                        action = delegate ()
-                        {
-                            Pawn pawn2;
-                            if ((from x in this.GetInner().InnerListForReading
-                                 where x.RaceProps.Humanlike && !x.InMentalState
-                                 select x).TryRandomElement(out pawn2))
-                            {
-                                pawn2.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Sad, null, false, false, null, false, false, false);
-                            }
-                        }
-                    };
-                    //yield return new Command_Action
-                    //{
-                    //    defaultLabel = "Dev: Mental break",
-
-                    //    action = delegate ()
-                    //    {
-                    //        var list = new List<FloatMenuOption>();
-                    //        foreach (var p in innerContainer)
-                    //        {
-                    //            list.Add(new FloatMenuOption(p.NameFullColored,
-                    //            delegate
-                    //            {
-                    //                bool tmp=false;
-                    //               tmp= p.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Sad,
-                    //                    null, true, false, null, false, false, false);
-
-                    //            }, MenuOptionPriority.Default, null, null, 29f));
-
-                    //            Find.WindowStack.Add(new FloatMenu(list));
-                    //        }
-                    //    }
-                    //};
-
-                }
             }
 
             //string[] direcs = { "North", "East", "South", "West" };
@@ -413,14 +364,15 @@ namespace NGT
                 var pawnToEject = pawn;
                 list.Add(new FloatMenuOption(textToAdd,
                     delegate
-                    {
+                    {                        
                         //innerContainer.TryDrop(pawnToEject, Toils_Towers.GetEnterOutLoc(this), Map, ThingPlaceMode.Near, out _);
                         foreach (var defVerb in pawnToEject.equipment.Primary.def.Verbs)
                         {
-                            defVerb.range -= bonusRange;
+                            defVerb.range -= bonusRange;                            
                         }
                         pawnToEject.DrawGUIOverlay();
-                        innerContainer.TryDrop(pawnToEject, this.InteractionCell, Map, ThingPlaceMode.Near, out _ ) ;
+                        innerContainer.TryDrop(pawnToEject, this.InteractionCell, Map, ThingPlaceMode.Near,out _,
+                                                (p, ret) => (p as Pawn).equipment.PrimaryEq.AllVerbs.ForEach(v => v.caster = p)) ;
                     }, MenuOptionPriority.Default, null, null, 29f));
             }
 

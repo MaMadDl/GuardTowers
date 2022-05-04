@@ -34,17 +34,9 @@ namespace NGT
             foreach (var pawn in tower.GetInner().InnerListForReading)
             {
                 
-                if (pawn.TryGetAttackVerb(currentTarget.Thing) == null)
+                if (pawn.TryGetAttackVerb(currentTarget.Thing) != null)
                 {
-                    foreach(var verb in pawn.equipment.PrimaryEq.AllVerbs)
-                    {
-                        verb.caster = pawn;
-                        
-                    }
-                    
-                }
-                else
-                {
+
                     pawn.TryGetAttackVerb(currentTarget.Thing).caster = pawn;
                 }
 
