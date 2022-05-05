@@ -20,7 +20,11 @@ namespace NGT
         public override void PostStart(string reason)
         {
             base.PostStart(reason);
-            tower = (pawn.MentalState.def.Worker as ShootoutStateWorker).towerHolder;
+
+            //keep a backup from tower since we are gonna change some stats like capacity
+            bckupTower = tower = (pawn.MentalState.def.Worker as ShootoutStateWorker).towerHolder;
+            shotCounts =0;
+            targetLocations = new List<Thing>();
 
         }
 
@@ -28,32 +32,81 @@ namespace NGT
         {
             base.MentalStateTick();
 
+            //we need to make sure which position to use all the time first or second
+            Log.ErrorOnce("Check Positions:  "+tower.Position.ToString() + "\t" 
+                              + ((LocalTargetInfo)tower).CenterVector3.ToIntVec3().ToString(), 1);
+
+            if(shotCounts > 20)
+            {
+                RecoverFromState();
+            }
+
             if (tower.GetInner().Contains(pawn))
             {
-                SelectRandomLocation(); // => updates target
+                if (targetLocations.Count == 0)
+                {
+                    SelectRandomLocation();
+                    Log.Warning(targetLocations.Count.ToString()); // check if value is correct
+                }
+                target = targetLocations.RandomElement();
+
+                tower.AttackVerb.TryStartCastOn(target);
+                
+                //(tower.AttackVerb as Verb_GuardTowers).castShotMentalBreak(target);
 
             }
             else
             {
                 var job = new Job(DefDatabase<JobDef>.GetNamed("NGT_EnterTower"), tower);
-                bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
+                bool ret = pawn.jobs.TryTakeOrderedJob(job, JobTag.InMentalState);
                 if (!ret)
                 {
                     Log.Warning("couldn't do the job snapping out of it");
                     base.RecoverFromState();
                 }
-                tower.EjectAllContents(); 
+                if (pawn.Position == tower.InteractionCell)
+                {
+                    //its good for now block exit and fill cap so no1 else can enter while its goin
+                    tower.EjectAllContents();
+                    tower.Capacity = 1;
+                }
             }
+        }
 
+        public override void Notify_AttackedTarget(LocalTargetInfo hitTarget)
+        {
+            base.Notify_AttackedTarget(hitTarget);
+            shotCounts++;
+            Log.Warning("shooting");
+        }
+
+        public override void PostEnd()
+        {
+            
+            base.PostEnd();
+            Log.Warning("recovering");
+
+            tower.FixBonusStats(tower.GetInner().InnerListForReading);
+            tower.GetInner().TryDropAll(tower.InteractionCell, pawn.MapHeld, ThingPlaceMode.Near);
+            tower.Capacity = bckupTower.Capacity;
         }
 
         private void SelectRandomLocation()
         {
-           
+            //var rgn = ((LocalTargetInfo)tower).CenterVector3.ToIntVec3()
+            //                                    .GetRegion(pawn.MapHeld, RegionType.Set_Passable);
+
+            List<Thing> list = pawn.MapHeld.listerThings.ThingsInGroup(ThingRequestGroup.Everything);
+
+            targetLocations = list.Where((item) =>  item.Position.DistanceTo(tower.Position) < 
+                                            pawn.equipment.Primary.def.Verbs.First().range ).ToList(); 
         }
 
-        private LocalTargetInfo target;
+        private List<Thing> targetLocations;
+        public Thing target;
         private BaseGuardTower tower;
+        private BaseGuardTower bckupTower;
+        private int shotCounts;
     }
 
     

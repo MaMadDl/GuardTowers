@@ -184,6 +184,10 @@ namespace NGT
         }
         public virtual void EjectAllContents()
         {
+            if(innerContainer.InnerListForReading.Where(p => p.InMentalState).Any())
+            {
+                return;
+            }
             (AttackVerb as Verb_GuardTowers)?.ResetVerb();
             
             FixBonusStats(GetInner().InnerListForReading);
@@ -352,7 +356,7 @@ namespace NGT
                 return;
             }
 
-            foreach (var pawn in innerContainer)
+            foreach (var pawn in innerContainer.InnerListForReading.Where(p => !p.InMentalState))
             {   
                 var postfix = new TaggedString();
                 if (pawn.equipment.Primary != null && pawn.equipment.Primary.def.IsRangedWeapon)

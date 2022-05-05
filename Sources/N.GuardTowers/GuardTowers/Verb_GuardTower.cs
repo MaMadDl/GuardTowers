@@ -12,8 +12,6 @@ namespace NGT
         private List<Verb> verbss;
         private Dictionary<Pawn, int> warmupDictionary;
 
-        
-
         public override void Reset()
         {
             base.Reset();
@@ -41,6 +39,16 @@ namespace NGT
                 }
 
                 
+            }
+        }
+
+        public void castShotMentalBreak(LocalTargetInfo target, Pawn casterPawn)
+        {
+            //since we are in mental no more than 1 pawn can exists inside tower
+            this.currentTarget = target;
+            if (checkWarmup(casterPawn, casterPawn.TryGetAttackVerb(currentTarget.Thing)))
+            {
+                TryCastShot();
             }
         }
 
