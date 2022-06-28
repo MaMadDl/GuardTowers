@@ -28,7 +28,7 @@ namespace NGT
             Stats = new List<string>();
             Capacity = cap;
         }
-
+    
         public bool HasAnyContents => innerContainer.Count > 0;
 
         public Thing ContainedThing => innerContainer.Count != 0 ? innerContainer[0] : null;
@@ -427,6 +427,15 @@ namespace NGT
 
             //   str = this.innerContainer.ContentsString;
             var str = $"{innerContainer.Count}/{Capacity}";
+
+            foreach(var pawn in innerContainer.InnerListForReading)
+            {
+                if (pawn.InMentalState)
+                {
+                    str += "\nOccupied, Someone Is Breaking Inside";
+                    break;
+                }
+            }
 
             if (!text.NullOrEmpty())
             {

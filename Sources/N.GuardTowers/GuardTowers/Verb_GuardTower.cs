@@ -46,10 +46,9 @@ namespace NGT
         {
             //since we are in mental no more than 1 pawn can exists inside tower
             this.currentTarget = target;
-            if (checkWarmup(casterPawn, casterPawn.TryGetAttackVerb(currentTarget.Thing)))
-            {
-                TryCastShot();
-            }
+            
+            TryCastShot();
+
         }
 
         protected override bool TryCastShot()
@@ -122,7 +121,7 @@ namespace NGT
 
             return true;
         }
-        private bool checkWarmup(Pawn shooter, Verb attackVerb)
+        public bool checkWarmup(Pawn shooter, Verb attackVerb)
         {
             if (attackVerb.IsMeleeAttack)
             {

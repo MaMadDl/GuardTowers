@@ -1,5 +1,10 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using Verse;
+using Verse.AI;
+using RimWorld.Planet;
+using System;
+using System.Linq;
 
 namespace NGT
 {
@@ -24,4 +29,48 @@ namespace NGT
             }
         }
     }
+
+    [HarmonyPatch(typeof(Pawn), nameof(Pawn.Kill)
+     , new[] { typeof(DamageInfo?), typeof(Hediff) })]
+    static class guardtower_deathEvent
+    {
+        static void Prefix(Pawn __instance)
+        {
+            var towerContainer = __instance.MapHeld.listerBuildings.allBuildingsColonist.OfType<BaseGuardTower>();
+            var towerHolder = towerContainer.Where(t => t.GetInner().Contains(__instance)).First();
+            towerHolder.GetInner().TryDrop(__instance, towerHolder.InteractionCell, __instance.MapHeld, ThingPlaceMode.Near, out _);
+        }
+
+
+    }
+
+    ////[HarmonyPatch(typeof(VerbProperties),"isMortar",MethodType.Setter)]
+    //static class GuardTowerUnObstractedPatch
+    //{
+    //    static System.Reflection.MethodBase TargetMethod()
+    //    {
+    //        return typeof(VerbProperties).GetMethod("isMortar",
+    //            System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static).MakeGenericMethod(typeof(bool));
+    //    }
+    //    static void Postfix()
+
+    //    {
+    //        FileLog.Log("workssss???");
+    //        Log.ErrorOnce("postfix", 1);
+    //    }
+    //}
+
+    //[HarmonyPatch(typeof(VerbProperties))]
+    //[HarmonyPatch(MethodType.Normal)]
+    //class RPatch
+    //{
+    //    [HarmonyReversePatch]
+    //    [HarmonyPatch(typeof(VerbProperties), "isMortar", MethodType.Setter)]
+    //    public static void IsMortar( bool value)
+    //    {
+    //        FileLog.Log("inMortar");
+    //        //___instance.
+    //    }
+    //}
+
 }
