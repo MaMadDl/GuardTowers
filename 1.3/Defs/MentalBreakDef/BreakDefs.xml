@@ -8,7 +8,59 @@
         <intensity>Major</intensity>
     </MentalBreakDef>
 
+    <MentalBreakDef>
+        <defName>ShootoutMurdurousRage</defName>
+        <mentalState>NGT_towerMurderousRage</mentalState>
+        <baseCommonality>1</baseCommonality>
+        <intensity>Extreme</intensity>
+        <commonalityFactorPerPopulationCurve>
+            <points>
+              <li>(2, 0.1)</li>
+              <li>(7, 1)</li>
+            </points>
+          </commonalityFactorPerPopulationCurve>
+    </MentalBreakDef>
+
+    <MentalStateDef ParentName="BaseMentalState">
+        <defName>NGT_towerMurderousRage</defName>
+        <stateClass>NGT.MB_ShootoutSlaughter</stateClass>
+        <workerClass>NGT.ShootoutStateWorker</workerClass>
+        
+        <prisonersCanDo>false</prisonersCanDo>
+        <colonistsOnly>true</colonistsOnly>
+        <slavesCanDo>true</slavesCanDo>
+
+        <label>Shootout Slaughter</label>
+        <category>Aggro</category>
+        <blockInteractionInitiationExcept>
+            <li>Insult</li>
+        </blockInteractionInitiationExcept>
+        <blockInteractionRecipientExcept>
+            <li>Insult</li>
+        </blockInteractionRecipientExcept>
+        <moodRecoveryThought>Catharsis</moodRecoveryThought>
+        <blockNormalThoughts>true</blockNormalThoughts>
+        <nameColor>(0.9,0.2,0.5)</nameColor>
+
+        <beginLetter>{0} has had enough.\n\n[PAWN_pronoun] will Shoot any colonists that [PAWN_pronoun] can. let's hope no one dies.</beginLetter>
+
+        <beginLetterDef>ThreatSmall</beginLetterDef>
+
+        <minTicksBeforeRecovery>10000</minTicksBeforeRecovery>
+        <maxTicksBeforeRecovery>10000</maxTicksBeforeRecovery>
+
+        <recoveryMtbDays>0.166</recoveryMtbDays>
+        <recoveryMessage>{0} is cooled down and no longer Shooting Colonists.</recoveryMessage>
+
+        <baseInspectLine>Mental state: Murderous Rage Shootout</baseInspectLine>
+
+        <!-- <stateEffecter>Berserk</stateEffecter> check in game -->
+        <tale>NGT_ShootoutSlaughterTale</tale> 
+        <recoverFromSleep>true</recoverFromSleep>
+        <unspawnedCanDo>true</unspawnedCanDo>
     
+    </MentalStateDef>
+
     <MentalStateDef ParentName="BaseMentalState">
         <defName>NGT_towerShootout</defName>
         <stateClass>NGT.MB_Shootout</stateClass>
@@ -28,9 +80,9 @@
         </blockInteractionRecipientExcept>
         <moodRecoveryThought>Catharsis</moodRecoveryThought>
         <blockNormalThoughts>true</blockNormalThoughts>
-        <nameColor>(0.9,0.2,0.5)</nameColor>
+        <nameColor>(0.65, 0.9, 0.93)</nameColor>
 
-        <beginLetter>{0} has had enough.\n\n[PAWN_pronoun] will Shoot randomly everywhere. lets hope he doesn't hit anybody.</beginLetter>
+        <beginLetter>{0} has had enough.\n\n[PAWN_pronoun] will Shoot randomly everywhere. lets hope [PAWN_pronoun] doesn't hit anybody.</beginLetter>
 
         <beginLetterDef>ThreatSmall</beginLetterDef>
 

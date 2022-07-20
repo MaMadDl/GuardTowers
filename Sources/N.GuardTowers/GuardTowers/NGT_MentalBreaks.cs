@@ -20,10 +20,34 @@ namespace NGT
 
             //keep a backup from tower since we are gonna change some stats like capacity
             tower = (pawn.MentalState.def.Worker as ShootoutStateWorker).towerHolder;
-            shotCounts = 0;
             targetLocations = new List<Thing>();
             towerCap = tower.Capacity;
             
+        }
+
+        public virtual void StartAttackSequence(Pawn pawn)
+        {
+
+            if (targetLocations.Count == 0)
+            {
+                SelectRandomLocation();
+                //Log.Warning(targetLocations.Count.ToString()); // check if value is correct
+            }
+
+            if (warmUpVal > 0)
+            {
+                warmUpVal -= 1;
+            }
+            else
+            {
+                Thing target = targetLocations.RandomElement();
+
+                var attackVerb = pawn.TryGetAttackVerb(target);
+                var statValue = pawn.GetStatValue(StatDefOf.AimingDelayFactor);
+                warmUpVal = (attackVerb.verbProps.warmupTime * statValue).SecondsToTicks() +
+                                            attackVerb.verbProps.AdjustedCooldownTicks(attackVerb, pawn);
+                tower.OrderAttack(target);
+            }
         }
 
         public override void MentalStateTick()
@@ -34,29 +58,10 @@ namespace NGT
             //Log.ErrorOnce("Check Positions:  " + tower.Position.ToString() + "\t"
             //                  + ((LocalTargetInfo)tower).CenterVector3.ToIntVec3().ToString(), 1);
 
-            if (shotCounts > 20)
-            {
-                RecoverFromState();
-            }
-
-
-
             if (tower.GetInner().Contains(pawn))
             {
-                if (targetLocations.Count == 0)
-                {
-                    SelectRandomLocation();
-                    //Log.Warning(targetLocations.Count.ToString()); // check if value is correct
-                }
 
-                target = targetLocations.RandomElement();
-                //((Verb_GuardTowers)tower.AttackVerb).castShotMentalBreak(target,pawn) ;
-                var vb = ((Verb_GuardTowers)tower.AttackVerb);
-                var pawnVB = pawn.TryGetAttackVerb(target);
-
-                vb.TryStartCastOn(target);
-
-
+                StartAttackSequence(pawn);
 
             }
             else
@@ -81,13 +86,6 @@ namespace NGT
             }
         }
 
-        public override void Notify_AttackedTarget(LocalTargetInfo hitTarget)
-        {
-            base.Notify_AttackedTarget(hitTarget);
-            shotCounts++;
-            Log.Warning("shooting");
-        }
-
         public override void PostEnd()
         {
 
@@ -96,7 +94,7 @@ namespace NGT
             tower.Capacity = towerCap;
 
             base.PostEnd();
-             
+
         }
 
         private void SelectRandomLocation()
@@ -110,13 +108,47 @@ namespace NGT
                                             pawn.equipment.Primary.def.Verbs.First().range).ToList();
         }
 
-        private List<Thing> targetLocations;
-        public Thing target;
-        private BaseGuardTower tower;
-        private int towerCap;
-        private int shotCounts;
+        protected List<Thing> targetLocations;
+        protected BaseGuardTower tower;
+        protected int towerCap;
+        protected int warmUpVal;
     }
 
+    public class MB_ShootoutSlaughter : MB_Shootout
+    {
+        public override void StartAttackSequence(Pawn pawn)
+        {
+            Pawn pawnTarget = pawn;
+            //base.StartAttackSequence(pawn);
+            if (targetLocations.Count == 0)
+            {
+
+                List<Thing> list = pawn.MapHeld.listerThings.ThingsInGroup(ThingRequestGroup.Pawn)
+                    .Where((p) => (p as Pawn).IsColonist).ToList(); ;
+
+                list.Remove(pawn);  // remove the pawn alrdy in mental break
+                list.ForEach(i => Log.Warning(i.ToString()));
+
+
+                targetLocations = list.Where((item) => item.Position.DistanceTo(tower.Position) <
+                                             pawn.equipment.Primary.def.Verbs.First().range).ToList();
+
+                pawnTarget = targetLocations.RandomElement() as Pawn;
+                tower.OrderAttack(pawnTarget);
+
+            }
+            else
+            {
+
+                if (tower.Position.DistanceTo((IntVec3)tower.TargetCurrentlyAimingAt) > pawn.equipment.Primary.def.Verbs.First().range)
+                {
+                    // clearing list to get new target
+                    targetLocations.Clear();   
+                }
+                
+            }
+        }
+    }
 
     public class ShootoutStateWorker : MentalStateWorker
     {
@@ -151,7 +183,13 @@ namespace NGT
 
                 return false;
             }
-
+            
+            List<Thing> pawnsInMap = pawn.MapHeld.listerThings.ThingsInGroup(ThingRequestGroup.Pawn)
+                    .Where((p) => (p as Pawn).IsColonist).ToList();
+            if (pawnsInMap.Count == 1)
+            {
+                return false;
+            }
 
             towerHolder = towerContainer.Where(t => pawn.CanReach(t, PathEndMode.InteractionCell, Danger.Unspecified))
                                       .OrderBy(x => ((LocalTargetInfo)pawn).Cell.DistanceTo(((LocalTargetInfo)x).Cell)).First();
@@ -162,4 +200,6 @@ namespace NGT
 
         public BaseGuardTower towerHolder;
     }
+
+
 }
