@@ -136,6 +136,10 @@ namespace NGT
 
             if (transfer)
             {
+                var eqName = ((Pawn)thing).equipment.Primary.Label.ToString().CapitalizeFirst();
+                var str = ((Pawn)thing).ToString() + $" ( {eqName} )";
+                Stats.Add(str);
+
                 foreach (var defVerb in ((Pawn)thing).equipment.Primary.def.Verbs)
                 {
                     defVerb.range += bonusRange;
@@ -169,7 +173,6 @@ namespace NGT
                     FixBonusStats(GetInner().InnerListForReading);
 
                     innerContainer.TryDropAll(this.InteractionCell, Map, ThingPlaceMode.Near, (pawn, res) => pawn.Kill(new DamageInfo(DamageDefOf.Crush, 1000)));
-                 
                 }
                 innerContainer.ClearAndDestroyContents(mode);
                 
@@ -191,6 +194,15 @@ namespace NGT
         }
         public virtual void EjectAllContents()
         {
+            Log.Warning(innerContainer.Count.ToString());
+            foreach(var p in innerContainer.InnerListForReading)
+            { 
+                foreach(var vb in p.equipment.PrimaryEq.AllVerbs)
+                {
+                    Log.Warning(vb.caster.ToString());
+                }
+            }
+
             if(innerContainer.InnerListForReading.Where(p => p.InMentalState).Any())
             {
                 return;
@@ -198,6 +210,8 @@ namespace NGT
             (AttackVerb as Verb_GuardTowers)?.ResetVerb();
             
             FixBonusStats(GetInner().InnerListForReading);
+
+            Stats.Clear();
 
             innerContainer.TryDropAll(this.InteractionCell, Map, ThingPlaceMode.Near, 
                                         (p, ret) => (p as Pawn).equipment.PrimaryEq.AllVerbs.ForEach(v => v.caster = p));
@@ -335,29 +349,6 @@ namespace NGT
                 eject.icon = ContentFinder<Texture2D>.Get("UI/Commands/PodEject");
                 yield return eject;
             }
-
-            //string[] direcs = { "North", "East", "South", "West" };
-            //var direction = new Command_Action
-            //{
-            //    defaultLabel = $"{"NowDirection".Translate()}\n{direcs[Directions]}",
-            //    defaultDesc = "ClickToChangeEnterDirection".Translate(),
-            //    icon = TexCommand.GatherSpotActive,
-            //    action = delegate
-            //    {
-            //        if (Directions > 2)
-            //        {
-            //            Directions = 0;
-            //        }
-            //        else
-            //        {
-            //            Directions++;
-            //        }
-            //    }
-            //};
-
-            //yield return direction;
-
-           
         }
 
         private void SelectColonist()
@@ -387,6 +378,10 @@ namespace NGT
                             defVerb.range -= bonusRange;                            
                         }
                         pawnToEject.DrawGUIOverlay();
+                        
+                        var index=innerContainer.InnerListForReading.FindIndex(p=> p == pawnToEject);
+                        Stats.RemoveAt(index);
+
                         innerContainer.TryDrop(pawnToEject, this.InteractionCell, Map, ThingPlaceMode.Near,out _,
                                                 (p, ret) => (p as Pawn).equipment.PrimaryEq.AllVerbs.ForEach(v => v.caster = p)) ;
                     }, MenuOptionPriority.Default, null, null, 29f));
@@ -420,6 +415,25 @@ namespace NGT
             AttackVerb.verbProps.range = maxRange;
         }
 
+        public override string GetInspectString()
+        {
+            var text = base.GetInspectString();
+            
+            var str = $"{innerContainer.Count}/{Capacity}";
+
+            if (!text.NullOrEmpty())
+            {
+                text += "\n";
+            }
+            if (innerContainer.InnerListForReading.Where(p => p.InMentalState).Any())
+            {
+                str += "\nOccupied, Someone Is Breaking Inside";
+            }
+
+
+            return text +"Range: " + bonusRange.ToString() + "\nCapacity: " + str.CapitalizeFirst() +
+                   (innerContainer.Count == Capacity ? "(Full)" : "");
+        }
     }
 
     public class SimpleGT : BaseGuardTower
@@ -428,34 +442,6 @@ namespace NGT
         {
             bonusRange = 4;
             TowerName = "Simple Guard Tower";
-            Stats.Add("Range("+bonusRange.ToString()+")"); //done
-            Stats.Add("UnObstracted Shooting"); //true
-        }
-
-
-        public override string GetInspectString()
-        {
-            var text = base.GetInspectString();
-
-            //   str = this.innerContainer.ContentsString;
-            var str = $"{innerContainer.Count}/{Capacity}";
-
-            foreach(var pawn in innerContainer.InnerListForReading)
-            {
-                if (pawn.InMentalState)
-                {
-                    str += "\nOccupied, Someone Is Breaking Inside";
-                    break;
-                }
-            }
-
-            if (!text.NullOrEmpty())
-            {
-                text += "\n";
-            }
-
-            return text + "SimpleGT".Translate() + ": " + str.CapitalizeFirst() +
-                   (innerContainer.Count == Capacity ? "(Full)" : "");
         }
     }
 

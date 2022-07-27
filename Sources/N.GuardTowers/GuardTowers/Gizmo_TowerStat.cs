@@ -32,32 +32,18 @@ namespace NGT
             Text.WordWrap = false;
             GUI.BeginGroup(rect);
             Rect rect2 = rect.AtZero().ContractedBy(10f);
-            Text.Font = GameFont.Small;
-            Rect rect3 = new Rect(rect2.x, rect2.y - 2f, rect2.width, 100f);
-            string NameStr = TwName;
-            Widgets.Label(rect3, NameStr.Truncate(rect3.width, null));
-            float num = rect2.y + Text.LineHeight + Text.SpaceBetweenLines + 7f;
+            float num =  7f;
             GUI.color = Color.white;
             Text.Font = GameFont.Tiny;
-            int num2 = 0;
+
             foreach (var stat in StatKeys)
             {
                 Rect rect4;
-                if (num2 % 2 == 0)
-                {
-                    rect4 = new Rect(rect2.x, num, rect2.width / 2f, 100f);
-                }
-                else
-                {
-                    rect4 = new Rect(rect2.x + rect2.width / 2f, num, rect2.width / 2f, 100f);
-                }
-         
+                rect4 = new Rect(rect2.x, num, rect2.width , 100f);         
+
                 Widgets.Label(rect4, stat.ToString().Truncate(rect4.width, null));
-                if (num2 % 2 == 1)
-                {
-                    num += Text.LineHeight + Text.SpaceBetweenLines;
-                }
-                num2++;
+                num += Text.LineHeight + Text.SpaceBetweenLines;
+                
 
             }
             GUI.color = Color.white;
