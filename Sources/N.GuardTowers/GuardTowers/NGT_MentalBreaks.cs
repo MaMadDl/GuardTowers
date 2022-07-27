@@ -103,7 +103,7 @@ namespace NGT
             //                                    .GetRegion(pawn.MapHeld, RegionType.Set_Passable);
 
             List<Thing> list = pawn.MapHeld.listerThings.ThingsInGroup(ThingRequestGroup.Everything);
-
+            
             targetLocations = list.Where((item) => item.Position.DistanceTo(tower.Position) <
                                             pawn.equipment.Primary.def.Verbs.First().range).ToList();
         }
@@ -127,7 +127,7 @@ namespace NGT
                     .Where((p) => (p as Pawn).IsColonist).ToList(); ;
 
                 list.Remove(pawn);  // remove the pawn alrdy in mental break
-                list.ForEach(i => Log.Warning(i.ToString()));
+                //list.ForEach(i => Log.Warning(i.ToString()));
 
 
                 targetLocations = list.Where((item) => item.Position.DistanceTo(tower.Position) <

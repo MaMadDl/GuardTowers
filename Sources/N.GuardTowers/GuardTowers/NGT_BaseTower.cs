@@ -151,9 +151,16 @@ namespace NGT
         {
             if (innerContainer.Count > 0 )
             {
+                
                 (AttackVerb as Verb_GuardTowers)?.ResetVerb();
                 if (mode == DestroyMode.Deconstruct)
                 {
+                    if (innerContainer.InnerListForReading.Where(p => p.InMentalState).Any())
+                    {
+                        // add top Message to inform about mental break Later 
+                        return;
+                    }
+
                     EjectAllContents();
 
                 }
@@ -289,8 +296,13 @@ namespace NGT
         }
         // change icon UI Button
         public override IEnumerable<Gizmo> GetGizmos()
-        {   
-            
+        {
+
+            if (innerContainer.InnerListForReading.Where(p => p.InMentalState).Any())
+            {
+                yield break;
+            }
+
             var stats = new Gizmo_TowerStat
             {
                 TwName = TowerName,

@@ -42,15 +42,6 @@ namespace NGT
             }
         }
 
-        public void castShotMentalBreak(LocalTargetInfo target, Pawn casterPawn)
-        {
-            //since we are in mental no more than 1 pawn can exists inside tower
-            this.currentTarget = target;
-            
-            TryCastShot();
-
-        }
-
         protected override bool TryCastShot()
         {
             
@@ -111,12 +102,14 @@ namespace NGT
             //Log.Message($"Found {verbss.Count} verbs");
             foreach (var vb in verbss)
             {
+                var tmp = vb.caster;
                 //Log.Message($"{vb}");
                 vb.caster = caster;
-                
+
                 //vb.WarmupComplete();
                 vb.TryStartCastOn(currentTarget);
-               
+
+                vb.caster = tmp;
             }
 
             return true;
