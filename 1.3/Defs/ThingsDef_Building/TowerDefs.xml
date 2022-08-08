@@ -5,15 +5,15 @@
         <drawerType>MapMeshAndRealTime</drawerType>
         <altitudeLayer>Building</altitudeLayer>
         <hasInteractionCell>True</hasInteractionCell>
-        <interactionCellOffset>(0,0,-3)</interactionCellOffset>
+        <interactionCellOffset>(0,0,-2)</interactionCellOffset>
         <stealable>false</stealable>
-        <size>(2,2)</size>
+        <size>(3,3)</size>
         <passability>Impassable</passability>
         <fillPercent>0.5</fillPercent>
         <designationCategory>Security</designationCategory>
         <constructionSkillPrerequisite>8</constructionSkillPrerequisite>
         <uiIconScale>0.8</uiIconScale>
-      
+        
         <building>
            <ai_combatDangerous>true</ai_combatDangerous>
            <turretGunDef>Gun_TowerGun</turretGunDef>
@@ -28,7 +28,7 @@
             <li>PlaceWorker_NotUnderRoof</li>
             <li>PlaceWorker_PreventInteractionSpotOverlap</li>
             <li>NGT.PlaceWorker_ShowColonistsRadius</li>
-            
+            <li>NGT.PlaceWorker_NeverAdjacentTower</li>
         </placeWorkers>
         <hasTooltip>true</hasTooltip>
         <blockWind>true</blockWind>
@@ -37,21 +37,27 @@
             <li>NGT.ITab_Tower</li>
         </inspectorTabs>
 
+        <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+
     </ThingDef>
     
     <ThingDef ParentName="BaseGuardTower">
         <thingClass>NGT.SimpleGT</thingClass>
         <defName>GuardTower_Simple</defName>
-        <label>Simple GuardTower</label>
+        <label>Wooden GuardTower</label>
         <description>A Simple Guardtower Made out of wood which can House a Colonist to shoot from inside with increased Range</description>
         <graphicData>
-            <graphicClass>Graphic_Single</graphicClass>
-            <texPath>Things/Building/Security/SimpleGuardTower</texPath>
-            <drawSize>(2,6)</drawSize>
-            <damageData>
-                <cornerBR>Damage/Corner</cornerBR>
-            </damageData>
+            <texPath>Things/Building/Security/WatchTower</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(3,3)</drawSize>
+			<damageData>
+				<rect>(0.1,0.1,1.8,1.8)</rect>
+			</damageData>
         </graphicData>
+        <size>(3,3)</size>
+        <interactionCellOffset>(0,0,-2)</interactionCellOffset>
+
+        <castEdgeShadows>true</castEdgeShadows>
         <stuffCategories>
             <li>Woody</li>
         </stuffCategories>
@@ -72,12 +78,11 @@
         <statBases>
             <MaxHitPoints>700</MaxHitPoints>
             <Beauty>-2</Beauty>
-            <WorkToBuild>1000</WorkToBuild>
+            <WorkToBuild>2000</WorkToBuild>
             <Mass>800</Mass>
             <Flammability>75</Flammability>
             <ShootingAccuracyTurret>0.96</ShootingAccuracyTurret>
         </statBases>
-        <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
         <!-- <soundImpactDefault>BulletImpact_Wood</soundImpactDefault> -->
 
     </ThingDef>
@@ -113,5 +118,41 @@
             <!-- <consumeFuelPerShot>1</consumeFuelPerShot> -->
             </li>
         </verbs>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseGuardTower">
+        <thingClass>NGT.ConcreteGT</thingClass>
+        
+        <defName>GuardTower_Normal</defName>
+        <label>Guard Tower</label>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/Security/SimpleGuardTower</texPath>
+            <drawSize>(2,6)</drawSize>
+            <damageData>
+                <cornerBR>Damage/Corner</cornerBR>
+            </damageData>
+        </graphicData>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <costStuffCount>900</costStuffCount>
+        <costList>
+            <WoodLog>100</WoodLog>
+            <Steel>75</Steel>
+        </costList>
+        <researchPrerequisites>
+            <li>ModernGuardTowers</li>
+        </researchPrerequisites>
+        <statBases>
+            <MaxHitPoints>1000</MaxHitPoints>
+            <Beauty>-5</Beauty>
+            <WorkToBuild>2750</WorkToBuild>
+            <Mass>2500</Mass>
+            <Flammability>10</Flammability>
+            <ShootingAccuracyTurret>0.96</ShootingAccuracyTurret>
+        </statBases>      
+
     </ThingDef>
 </Defs>

@@ -17,9 +17,7 @@ namespace NGT
         public ITab_Tower()
         {
             
-            labelKey = "TabBunkerContents";
-            //containedItemsKey = "ContainedItems";
-            //canRemoveThings = false;
+            labelKey = "TowerContents";
             size = new Vector2(500f, 470f);
         }
 

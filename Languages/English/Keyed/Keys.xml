@@ -11,5 +11,7 @@
   <Shooter>shooter</Shooter>
   <SimpleGT>Bsaic GuardTower</SimpleGT>
   <TabBunkerContents>Pawns Inside</TabBunkerContents>
+  <CannotPlaceAdjacentTower>Cannot be placed within 6 tile radius</CannotPlaceAdjacentTower>
+
 
 </LanguageData>

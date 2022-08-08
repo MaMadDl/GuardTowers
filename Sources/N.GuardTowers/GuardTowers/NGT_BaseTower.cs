@@ -13,18 +13,16 @@ namespace NGT
     public class BaseGuardTower : Building_TurretGun , IThingHolder
     {
         //public int Directions;
-        public string TowerName;
         public List<String> Stats;
         
         protected ThingOwner<Pawn> innerContainer;
         public int bonusRange;
         public int Capacity;
 
-        public BaseGuardTower(int cap)
+        public BaseGuardTower(int cap, int range)
         {
-            bonusRange = 0;
+            bonusRange = range;
             innerContainer = new ThingOwner<Pawn>(this, false);
-            TowerName = "";
             Stats = new List<string>();
             Capacity = cap;
         }
@@ -319,7 +317,6 @@ namespace NGT
 
             var stats = new Gizmo_TowerStat
             {
-                TwName = TowerName,
                 StatKeys = Stats
 
             };
@@ -438,11 +435,17 @@ namespace NGT
 
     public class SimpleGT : BaseGuardTower
     {
-        public SimpleGT() : base(2)
-        {
-            bonusRange = 4;
-            TowerName = "Simple Guard Tower";
-        }
+        public SimpleGT() : base(1, 4) { }
+
     }
 
+    public class ConcreteGT : BaseGuardTower
+    {
+        public ConcreteGT() : base(2, 6) { }
+    }
+
+    public class FortifiedGT : BaseGuardTower
+    {
+        public FortifiedGT() : base(3, 3) { }
+    }
 }
